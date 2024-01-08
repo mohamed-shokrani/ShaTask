@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using ShaTask.Data;
 using ShaTask.Interfaces;
 using System.Linq.Expressions;
@@ -14,16 +15,21 @@ namespace ShaTask.Repository
             _context = context;
         }
 
-        public Task<T> CreateAsync(T entity)
+        public async Task CreateAsync(T entity)
         {
-            throw new NotImplementedException();
+           await _context.AddAsync(entity);
+             
         }
 
-        public Task<T> DeleteAsync(T entity)
+        public async Task DeleteAsync(Expression<Func<T,bool>> expression)
         {
-            throw new NotImplementedException();
+         await   _context.Set<T>().Where(expression).ExecuteDeleteAsync();
         }
-
+        public async Task<int> Update(Expression<Func<T, bool>> criteria, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> prop)
+        {
+            _context.Set<T>().Where(criteria).ExecuteUpdate(prop);
+            return 1;
+        }
         public async Task<T> GetByIdAsync(int id)
         {
           return await  _context.Set<T>().FindAsync(id);
@@ -41,9 +47,24 @@ namespace ShaTask.Repository
         {
             return _context.Set<T>().AsQueryable();
         }
-        public Task<T> UpdateAsync(T entity)
+        public IQueryable<T> GetAll(Expression<Func<T, bool>> expression =null,params Expression<Func<T, object>>[] includes)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = _context.Set<T>().Where(expression);
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return query.AsQueryable();
+        }
+
+        public async Task  UpdateAsync(T entity)
+        {
+             _context.Update(entity);
         }
     }
 }

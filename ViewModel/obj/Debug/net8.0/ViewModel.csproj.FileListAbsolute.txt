@@ -1,12 +1,13 @@
 F:\ShaTask\ViewModel\bin\Debug\net8.0\ViewModel.deps.json
 F:\ShaTask\ViewModel\bin\Debug\net8.0\ViewModel.dll
 F:\ShaTask\ViewModel\bin\Debug\net8.0\ViewModel.pdb
+F:\ShaTask\ViewModel\obj\Debug\net8.0\ViewModel.csproj.AssemblyReference.cache
 F:\ShaTask\ViewModel\obj\Debug\net8.0\ViewModel.GeneratedMSBuildEditorConfig.editorconfig
 F:\ShaTask\ViewModel\obj\Debug\net8.0\ViewModel.AssemblyInfoInputs.cache
 F:\ShaTask\ViewModel\obj\Debug\net8.0\ViewModel.AssemblyInfo.cs
 F:\ShaTask\ViewModel\obj\Debug\net8.0\ViewModel.csproj.CoreCompileInputs.cache
+F:\ShaTask\ViewModel\obj\Debug\net8.0\ViewModel.sourcelink.json
 F:\ShaTask\ViewModel\obj\Debug\net8.0\ViewModel.dll
 F:\ShaTask\ViewModel\obj\Debug\net8.0\refint\ViewModel.dll
 F:\ShaTask\ViewModel\obj\Debug\net8.0\ViewModel.pdb
 F:\ShaTask\ViewModel\obj\Debug\net8.0\ref\ViewModel.dll
-F:\ShaTask\ViewModel\obj\Debug\net8.0\ViewModel.csproj.AssemblyReference.cache

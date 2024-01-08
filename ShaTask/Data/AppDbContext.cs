@@ -49,6 +49,7 @@ public partial class AppDbContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.BranchId).HasColumnName("BranchID");
+            entity.Property(e => e.IsActive).HasColumnName("IsActive");
             entity.Property(e => e.CashierName)
                 .HasMaxLength(200)
                 .HasDefaultValue("");
@@ -88,6 +89,8 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.BranchId).HasColumnName("BranchID");
             entity.Property(e => e.CashierId).HasColumnName("CashierID");
+            entity.Property(e => e.IsDeleted).HasColumnName("IsDeleted");
+
             entity.Property(e => e.CustomerName)
                 .HasMaxLength(200)
                 .HasDefaultValue("");

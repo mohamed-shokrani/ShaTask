@@ -4,109 +4,123 @@
     ViewData["Title"] = "الفواتير";
 }
 
-<div class="container mt-4">
-    <h1>Invoice List</h1>
-    <div class="d-flex justify-content-end">
-        @Html.ActionLink("إضافة  جديد", "Create", "Invoices", null, htmlAttributes: new { @class = "btn btn-primary" })
+<div class="container mt-4 " dir="rtl">
+    <h1 class="text-center">الفواتير</h1>
+    @Html.ActionLink("إضافة  جديد", "Create", "Invoices", null, htmlAttributes: new { @class = "btn btn-primary m-3" })
 
-    </div>
-    <div class="row">
-        @foreach (var invoice in Model)
-        {
-            <div class="col-md-6 mb-4">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="container mb-5 mt-3">
-                        <div class="row d-flex align-items-baseline">
-                            <div class="col-xl-9">
-                                <p style="color: #7e8d9f;font-size: 20px;">Invoice >> <strong>ID: #@(invoice.InvoiceID)</strong></p>
-                            </div>
-                            <div class="col-xl-3 text-end">
-                                <a class="btn btn-light text-capitalize border-0" data-mdb-ripple-color="dark"><i class="fas fa-print text-primary"></i> Print</a>
-                                <a class="btn btn-light text-capitalize" data-mdb-ripple-color="dark"><i class="far fa-file-pdf text-danger"></i> Export</a>
-                            </div>
-                            <hr />
-                        </div>
-                        <div class="container">
-                            <div class="col-md-6">
-                                <div class="text-center">
-                                    <i class="fab fa-mdb fa-4x ms-0" style="color:#5d9fc5 ;"></i>
-                                    <p class="pt-0">MDBootstrap.com</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xl-8">
-                                    <ul class="list-unstyled">
-                                        <li class="text-muted">To: <span style="color:#5d9fc5 ;">@invoice.CustomerName</span></li>
-                                        <li class="text-muted">City: @invoice.CityName</li>
-                                        <li class="text-muted">BranchName: @invoice.BranchName</li>
-                                        <li class="text-muted">CashierName: @invoice.CashierName</li>
+  @if (Model.Any())
+    {
+        <div class="d-flex justify-content-end">
 
-                                        <li class="text-muted"><i class="fas fa-phone"></i> 123-456-789</li>
-                                    </ul>
+        </div>
+        <div class="row" >
+            @foreach (var invoice in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class=" mb-5 mt-3">
+                                <div class="row d-flex align-items-baseline">
+                                    <div class="col-xl-9">
+                                        <p style="color: #7e8d9f;font-size: 20px;">فاتورة رقم <strong>@(invoice.InvoiceID)</strong></p>
+                                    </div>
+                                    <div class="col-5 text-end mb-2">
+                                        <button onclick="deleteInvoice('@invoice.InvoiceID')" class="btn btn-outline-danger fw-bold text-capitalize" data-mdb-ripple-color="dark"><i class="fas fa-print text-primary"></i> حذف</button>
+                                        <button class="btn btn-outline-warning text-capitalize" data-mdb-ripple-color="dark"><i class="far fa-file-pdf text-danger"></i> تعديل</button>
+                                    </div>
+                                    <hr />
                                 </div>
-                                <div class="col-xl-4">
-                                    <p class="text-muted">Invoice</p>
-                                    <ul class="list-unstyled">
-                                        <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span class="fw-bold">ID:</span>#@(invoice.InvoiceID)</li>
-                                        <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span class="fw-bold">Creation Date: </span>@(invoice.Invoicedate.ToShortDateString())</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="row my-2 mx-1 justify-content-center">
-                                <table class="table table-striped table-borderless">
-                                    <thead style="background-color:#84B0CA ;" class="text-white">
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Description</th>
-                                            <th scope="col">Qty</th>
-                                            <th scope="col">Unit Price</th>
-                                            <th scope="col">Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @{
-                                            int index = 1;
-                                        }
-                                        @foreach (var item in invoice.Items)
-                                        {
-                                            <tr>
-                                                <th scope="row">@(index++)</th>
-                                                <td>@item.ItemName</td>
-                                                <td>@item.ItemCount</td>
-                                                <td>@item.ItemPrice</td>
-                                                <td>@(item.ItemPrice * item.ItemCount)</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <div class="col-xl-8">
-                                    <p class="ms-3">Add additional notes and payment information</p>
-                                </div>
-                                <div class="col-xl-3">
-                                    <ul class="list-unstyled">
-                                        <li class="text-muted ms-3"><span class="text-black me-4">SubTotal</span>@(invoice.TotalPrice)</li>
-@*                                         <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Tax(15%)</span>@(invoice.Tax)</li>
- *@                                    </ul>
-                                    <p class="text-black float-start"><span class="text-black me-3"> Total Amount</span><span style="font-size: 25px;">@(invoice.TotalPrice)</span></p>
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="row">
-                                <div class="col-xl-10">
-                                    <p>Thank you for your purchase</p>
-                                </div>
-                                <div class="col-xl-2">
-                                    <button type="button" class="btn btn-primary text-capitalize" style="background-color:#60bdf3 ;">Pay Now</button>
+                                <div class="">
+                                    <div class="col-md-6">
+                                        <div class="text-center">
+                                            <i class="fab fa-mdb fa-4x ms-0" style="color:#5d9fc5 ;"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-8">
+                                            <ul class="list-unstyled">
+                                                <li class="text-muted">إلى: <span style="color:#5d9fc5 ;">@invoice.CustomerName</span></li>
+                                                <li class="text-muted">المدينة: @invoice.CityName</li>
+                                                <li class="text-muted">اسم الفرع: @invoice.BranchName</li>
+                                                <li class="text-muted">اسم الكاشير: @invoice.CashierName</li>
+                                                <li class="text-muted"><i class="fas fa-phone"></i> 123-456-789</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-xl-4">
+                                            <p class="text-muted">الفاتورة</p>
+                                            <ul class="list-unstyled">
+                                                <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span class="fw-bold">الرقم:</span>#@(invoice.InvoiceID)</li>
+                                                <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span class="fw-bold">تاريخ الإنشاء: </span>@(invoice.InvoiceDate.ToShortDateString())</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row my-2 mx-1 justify-content-center">
+                                        <table class="table table-striped table-borderless" dir="rtl">
+                                            <thead style="background-color:#84B0CA;" class="text-white">
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">الوصف</th>
+                                                    <th scope="col">الكمية</th>
+                                                    <th scope="col">سعر الوحدة</th>
+                                                    <th scope="col">المبلغ</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    int index = 1;
+                                                }
+                                                @foreach (var item in invoice.InvoiceDetails)
+                                                {
+                                                    <tr>
+                                                        <th scope="row">
+                                                            @{
+                                                                index++;
+                                                            }
+                                                        </th>
+                                                        <td>@item.ItemName</td>
+                                                        <td>@item.ItemCount</td>
+                                                        <td>@item.ItemPrice</td>
+                                                        <td>@(item.ItemPrice * item.ItemCount)</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p class="ms-3">إضافة ملاحظات إضافية ومعلومات الدفع</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <ul class="list-unstyled">
+                                                <li class="text-muted ms-3"><span class="text-black me-4">الإجمالي الفرعي</span>@(invoice.TotalPrice)</li>
+                                                <!-- Add your tax information if needed -->
+                                            </ul>
+                                            <p class="text-black float-start"><span class="text-black me-3">المبلغ الإجمالي</span><span style="font-size: 25px;">@(invoice.TotalPrice)</span></p>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-xl-10">
+                                            <p>شكرًا لشرائك</p>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <button type="button" class="btn btn-primary text-capitalize" style="background-color:#60bdf3;">ادفع الآن</button>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-center">عفوا  لا يوجد بيانات لعرضها</p>
+
+    }
 </div>
+<script src="~/js/invoice/maininvoice.js"></script>

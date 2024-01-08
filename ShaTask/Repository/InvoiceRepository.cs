@@ -7,43 +7,36 @@ using ViewModel;
 
 namespace ShaTask.Interfaces
 {
-    public class InvoiceRepository : GenericRepository<InvoiceDetail> , IInvoiceRepository
+    public class InvoiceRepository : GenericRepository<InvoiceDetail>, IInvoiceRepository
     {
         private readonly AppDbContext _context;
 
-        public InvoiceRepository(AppDbContext context) :base(context) {
+        public InvoiceRepository(AppDbContext context) : base(context)
+        {
             _context = context;
         }
-      
-        public async Task<decimal> CalculateTotalPrice(long invoiceHeaderID)
-        {
-            var invoiceHeader = await _context.InvoiceHeaders.FindAsync(invoiceHeaderID);
-            if (invoiceHeader == null) return 0;
 
-            decimal totalPrice = invoiceHeader.InvoiceDetails.Sum(detail => (decimal)(detail.ItemCount * detail.ItemPrice));
-            return totalPrice;
-        }
-        
         public async Task<List<InvoiceVM>> GetAllInvoices()
         {
-            List<SelectListItem>
             var list = await (from i in _context.InvoiceDetails
-                                  join ih in _context.InvoiceHeaders on i.InvoiceHeaderId equals ih.Id
-                                  join c in _context.Cashiers on ih.CashierId equals c.Id
-                                  join b in _context.Branches on ih.BranchId equals b.Id
-                                  join city in _context.Cities on b.CityId equals city.Id
-                                  select new { i, ih, c, b, city }
+                              join ih in _context.InvoiceHeaders on i.InvoiceHeaderId equals ih.Id
+                              join c in _context.Cashiers on ih.CashierId equals c.Id into cashierJoin
+                              from cashier in cashierJoin.DefaultIfEmpty() 
+                              join b in _context.Branches on ih.BranchId equals b.Id
+                              join city in _context.Cities on b.CityId equals city.Id
+                              where !ih.IsDeleted
+                              select new { i, ih, cashier, b, city }
                                        ).GroupBy(x => x.ih.Id)
                                        .Select(group => new InvoiceVM
                                        {
                                            InvoiceID = group.Key,
-                                           CashierName = group.Select(x => x.c.CashierName).FirstOrDefault(),
+                                           CashierName = group.Select(x => x.cashier.CashierName).FirstOrDefault(),
                                            BranchName = group.Select(x => x.b.BranchName).FirstOrDefault(),
                                            CustomerName = group.Select(x => x.ih.CustomerName).FirstOrDefault(),
                                            CityName = group.Select(x => x.city.CityName).FirstOrDefault(),
-                                           Invoicedate = group.Select(x => x.ih.Invoicedate).FirstOrDefault(),
+                                           InvoiceDate = group.Select(x => x.ih.Invoicedate).FirstOrDefault(),
                                            TotalPrice = group.Sum(x => (decimal)(x.i.ItemCount * x.i.ItemPrice)),
-                                           Items = group.Select(g => new InvoiceItemVM
+                                           InvoiceDetails = group.Select(g => new InvoiceItemVM
                                            {
                                                ItemName = g.i.ItemName,
                                                ItemCount = g.i.ItemCount,
@@ -54,7 +47,13 @@ namespace ShaTask.Interfaces
 
             return list;
         }
-
-
+        public async Task<List<SelectListItem>> BranchSelectList()
+        {
+            return await _context.Branches.Select(x => new SelectListItem
+            {
+                Text = x.BranchName,
+                Value = x.Id.ToString(),
+            }).ToListAsync();
+        }
     }
 }

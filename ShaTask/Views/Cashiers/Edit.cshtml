@@ -1,0 +1,10 @@
+﻿@using ViewModel
+@model CashierVM
+@{
+    ViewData["Title"] = "تعديل  ";
+}
+
+<h2 class="text-center m-5">تعديل كاشير</h2>
+
+    @await Html.PartialAsync("_CreateAndEdit", Model);
+
