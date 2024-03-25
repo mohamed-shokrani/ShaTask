@@ -1,0 +1,8 @@
+﻿@using ViewModel
+@model CashierUpdateAndCreateVM
+@{
+    ViewData["Title"] = "Add new Cashier ";
+}
+
+<h2 class="text-center m-5"> Add new</h2>
+@await Html.PartialAsync("_CreateAndEdit", Model)

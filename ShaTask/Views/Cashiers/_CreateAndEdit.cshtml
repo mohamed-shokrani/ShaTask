@@ -1,0 +1,38 @@
+﻿@using ViewModel;
+@model CashierUpdateAndCreateVM;
+
+<div class="container mt-4 col-8" dir="rtl">
+   
+
+@using (Html.BeginForm())
+{
+
+    if (Model != null)
+    {
+        @Html.HiddenFor(ww=>ww.ID)
+            <h1>تعديل كاشير جديد</h1>
+    }
+    else
+    {
+        <h1>إنشاء كاشير جديد</h1>
+    }
+        <div class="form-group">
+            <label asp-for="CashierName" class="form-label">اسم الكاشير</label>
+            <input asp-for="CashierName" class="form-control" />
+            <span asp-validation-for="CashierName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="BranchID" class="form-label"> الفرع</label>
+            <select asp-for="BranchID" asp-items='new SelectList(Model.Branches,"Id","Name")' class="form-control">
+                <option value="">-- اختر الفرع --</option>
+            </select>
+            <span asp-validation-for="BranchID" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-2">حفظ</button>
+        @Html.ActionLink("  رجوع", "Index", null, htmlAttributes: new { @class = "btn btn-primary mt-2" })
+
+ 
+
+}

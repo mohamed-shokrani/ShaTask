@@ -1,0 +1,46 @@
+﻿@using ViewModel
+@model List<CashierVM>
+
+<div class="container mt-4" dir="rtl">
+    <h3 class="text-center">الكاشير</h3>
+    <a asp-action="Create" class="btn btn-primary">إنشاء كاشير</a>
+
+    @if (Model.Any())
+    {
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+
+                    <th>اسم الكاشير</th>
+                    <th> الفرع</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cashier in Model)
+                {
+                    <tr>
+
+                        <td>@cashier.CashierName</td>
+                        <td>@cashier.BranchName</td>
+                        <td>
+                            <a asp-action="Edit" class="btn btn-warning" asp-route-id="@cashier.ID">تعديل</a> |
+                            <a class="btn btn-danger" onclick="deleteCashier('@cashier.ID')">حذف</a>
+                            <a class="btn btn-danger" onclick="DeactivateCashier('@cashier.ID')">إلغاء النشاط</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-center">عفوا  لا يوجد بيانات لعرضها</p>
+    }
+    <!-- Create Button -->
+</div>
+
+<script src="~/js/cashier/cashier.js"></script>
+

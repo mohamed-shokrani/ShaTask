@@ -1,0 +1,39 @@
+﻿@using ViewModel
+@model List<InvoiceVM>
+
+    @{
+    ViewData["Title"] = "Invoices";
+    }
+
+    <div class="container mt-4">
+        <h1 class="text-center">Invoices</h1>
+        <div class="row">
+            @foreach (var invoice in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Invoice Number: <strong>@invoice.InvoiceID</strong>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Customer: @invoice.CustomerName</h5>
+                        <p class="card-text">Items:</p>
+                        <ul class="list-group">
+                            @foreach (var item in invoice.InvoiceDetails)
+                            {
+                            <li class="list-group-item">@item.ItemName - Quantity: @item.ItemCount - Total Price: @(item.ItemPrice * item.ItemCount)</li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <p class="card-text">Total Price: @invoice.TotalPrice</p>
+                        <a asp-route-id="@invoice.InvoiceID" asp-action="Update" class="btn btn-info">Update</a>
+                        <button onclick="deleteInvoice('@invoice.InvoiceID')" class="btn btn-outline-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+    </div>
+
+    <script src="~/js/invoice/maininvoice.js"></script>

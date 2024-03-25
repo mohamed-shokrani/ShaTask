@@ -1,0 +1,11 @@
+﻿@model InvoiceVM
+@{
+    ViewData["Title"] = "إضافة فاتورة ";
+}
+
+<h2 class="text-center m-5">إضافة فاتورة</h2>
+@await Html.PartialAsync("_CreateAndEdit", Model)
+@section Scripts {
+    <script src="~/js/invoice/invoice.js"></script>
+
+}
