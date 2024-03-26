@@ -24,4 +24,5 @@ public class InvoiceItemVM
 
     [DataType(DataType.Currency)]
     public double ItemPrice { get; set; }
+    public int Id { get; set; }
 }

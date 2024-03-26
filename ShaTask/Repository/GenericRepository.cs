@@ -25,6 +25,11 @@ namespace ShaTask.Repository
         {
          await   _context.Set<T>().Where(expression).ExecuteDeleteAsync();
         }
+        public void  Delete(T entity)
+        {
+             _context.Set<T>().Remove(entity);
+        }
+
         public async Task<int> Update(Expression<Func<T, bool>> criteria, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> prop)
         {
             _context.Set<T>().Where(criteria).ExecuteUpdate(prop);

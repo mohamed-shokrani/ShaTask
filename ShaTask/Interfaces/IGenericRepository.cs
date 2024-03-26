@@ -17,5 +17,6 @@ namespace ShaTask.Interfaces
         Task<bool> CheckEntityExistsAsync<T>(Expression<Func<T, bool>> expression) where T : class;
         Task<T> GetByIdAsyncWithInclude(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes);
         Task<T> GetByIdAsync(long id);
+        public void Delete(T entity);
     }
 }

@@ -1,21 +1,19 @@
-﻿@using ViewModel;
-@model CashierUpdateAndCreateVM;
+﻿@model CashierUpdateAndCreateVM
 
 <div class="container mt-4 col-8" dir="rtl">
-   
+  
+   <form method="post">
+        @if (Model != null && Model.ID != 0)
+        {
+            <h1>تعديل كاشير</h1>
+            <input type="hidden" asp-for="ID" />
+        }
+        else
+        {
+            <h1>إنشاء كاشير جديد</h1>
+        }
 
-@using (Html.BeginForm())
-{
 
-    if (Model != null)
-    {
-        @Html.HiddenFor(ww=>ww.ID)
-            <h1>تعديل كاشير جديد</h1>
-    }
-    else
-    {
-        <h1>إنشاء كاشير جديد</h1>
-    }
         <div class="form-group">
             <label asp-for="CashierName" class="form-label">اسم الكاشير</label>
             <input asp-for="CashierName" class="form-control" />
@@ -24,15 +22,13 @@
 
         <div class="form-group">
             <label asp-for="BranchID" class="form-label"> الفرع</label>
-            <select asp-for="BranchID" asp-items='new SelectList(Model.Branches,"Id","Name")' class="form-control">
+            <select asp-for="BranchID" asp-items='new SelectList(Model.Branches,"BranchID","BranchName")' class="form-control">
                 <option value="">-- اختر الفرع --</option>
             </select>
             <span asp-validation-for="BranchID" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-success mt-2">حفظ</button>
-        @Html.ActionLink("  رجوع", "Index", null, htmlAttributes: new { @class = "btn btn-primary mt-2" })
-
- 
-
-}
+        <a asp-action="Index" class="btn btn-primary mt-2">رجوع</a>
+    </form>
+</div>

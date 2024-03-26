@@ -42,6 +42,7 @@ public class InvoiceVM
     [DataType(DataType.Currency)]
     public decimal? TotalPrice { get; set; }
     public IEnumerable<InvoiceItemVM> InvoiceDetails { get; set; }
-    public IEnumerable<BranchVM> BranchList { get; set; } 
+    public IEnumerable<BranchVM> BranchList { get; set; }
+    public IEnumerable<CashierVM>? CashierList { get; set; }
 
 }

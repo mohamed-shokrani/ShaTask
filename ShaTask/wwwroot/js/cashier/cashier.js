@@ -10,7 +10,7 @@
         if (result.value) {
 
             $.ajax({
-                url: '/Cashiers/Delete/' + id,
+                url: '/cashiers/delete/' + id,
                 type: 'POST',
                 success: function (response) {
                     location.reload();
@@ -35,7 +35,7 @@ function DeactivateCashier(id) {
         if (result.value) {
 
             $.ajax({
-                url: '/Cashiers/DeactivateCashier/' + id,
+                url: '/cashiers/dactivateCashier/' + id,
                 type: 'POST',
                 success: function (response) {
                     location.reload();

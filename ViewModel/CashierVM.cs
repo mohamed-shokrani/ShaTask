@@ -3,7 +3,7 @@
 namespace ViewModel;
 public class CashierVM
 {
-    public int ID { get; set; }
+    public int CashierID { get; set; }
 
     [Required(ErrorMessage = "Cashier name is required")]
     [Display(Name = "Cashier Name")]

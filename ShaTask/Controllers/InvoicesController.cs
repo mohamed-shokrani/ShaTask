@@ -6,6 +6,7 @@ using ShaTask.Models;
 using ViewModel;
 
 namespace ShaTask.Controllers;
+[Route("invoices")]
 public class InvoicesController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -14,30 +15,35 @@ public class InvoicesController : Controller
     {
         _unitOfWork = unitOfWork;
     }
-    [Route("invoices")]
+   
     public async Task< IActionResult> Index()
     {
         var invoices = await _unitOfWork.InvoiceDetails.GetAllInvoices();
                                              
         return View(invoices);
     }
-    [Route("invoices/index1")]
+    [Route("index1")]
     public async Task<IActionResult> Index1()
     {
         var invoices = await _unitOfWork.InvoiceDetails.GetAllInvoices();
 
         return View(invoices);
     }
-    [Route("invoices/create")]
+    [Route("create")]
 
     public async Task<IActionResult> Create()
     {
         var vm = new InvoiceVM();
         vm.BranchList =await _unitOfWork.InvoiceDetails.BranchSelectList();
-
+        var list = await _unitOfWork.Cashiers.GetAllAsync();
+        vm.CashierList = list.Select(x => new CashierVM
+        {
+            CashierID = x.Id,
+            CashierName = x.CashierName,
+        });
         return View(vm);
     }
-    [HttpPost,Route("invoices/create")]
+    [HttpPost("create")]
     public async Task<IActionResult> Create(InvoiceVM vm, string invoiceDetailsJson)
     {
         vm.BranchList = await _unitOfWork.InvoiceDetails.BranchSelectList();
@@ -63,7 +69,7 @@ public class InvoicesController : Controller
         }
         return NotFound();
     }
-    [HttpGet("invoices/update/{id}")]
+    [HttpGet("update/{id}")]
 
     public async Task<IActionResult> Update(int ID)
     {
@@ -94,32 +100,31 @@ public class InvoicesController : Controller
         return NotFound();
 
     }
-    [HttpPost("invoices/updateupdate")]
+    [HttpPost("updateInvoice")]
 
-    public async Task<IActionResult> updateupdate(InvoiceUpdateVM vm, string invoiceDetailsJson)
+    public async Task<IActionResult> Update(InvoiceUpdateVM vm, string invoiceDetailsJson)
     {
-        var invoice = await _unitOfWork.InvoiceHeaders.GetByIdAsync(vm.Id);
-        var invoiceDetails = JsonConvert.DeserializeObject<List<InvoiceItemVM>>(invoiceDetailsJson);
-        if (invoice !=null )
+        var invoice = await _unitOfWork.InvoiceHeaders.GetByIdAsyncWithInclude(x => x.Id == vm.Id, i => i.InvoiceDetails);
+
+        if (invoice != null)
         {
             invoice.BranchId = vm.BranchID;
             invoice.CustomerName = vm.CustomerName;
-            invoice.InvoiceDetails = invoiceDetails.ToList().Select(x=> new InvoiceDetail
-                                                            {
-                                                                ItemCount = x.ItemCount,
-                                                                ItemName = x.ItemName,
-                                                                ItemPrice = x.ItemPrice
 
-                                                            }).ToList();
-            await _unitOfWork.InvoiceHeaders.UpdateAsync(invoice);
+            var updatedDetails = JsonConvert.DeserializeObject<List<InvoiceItemVM>>(invoiceDetailsJson);
+
+            ManageInvoiceDetails(invoice, updatedDetails);
+
             await _unitOfWork.Complete();
-            return RedirectToAction("index");
 
+            return RedirectToAction("index");
         }
 
         return View(vm);
     }
-    [HttpPost("invoices/delete/{id}")]
+
+
+    [HttpPost("delete/{id}")]
     public async Task<IActionResult> delete(int id)
     {
         var vm = new InvoiceVM();
@@ -135,5 +140,35 @@ public class InvoicesController : Controller
         }
 
 
+    }
+    private void ManageInvoiceDetails(InvoiceHeader invoice, List<InvoiceItemVM> updatedDetails)
+    {
+        var existingDetails = invoice.InvoiceDetails.ToList(); // ToList to avoid modifying collection while iterating
+        var detailsToAdd = updatedDetails.Where(ud => !existingDetails.Any(ed => ed.Id == ud.Id)).ToList();
+        var detailsToRemove = existingDetails.Where(ed => !updatedDetails.Any(ud => ud.Id == ed.Id)).ToList();
+        var detailsToUpdate = existingDetails.Where(ed => updatedDetails.Any(ud => ud.Id == ed.Id)).ToList();
+
+        foreach (var detailToAdd in detailsToAdd)
+        {
+            invoice.InvoiceDetails.Add(new InvoiceDetail
+            {
+                ItemName = detailToAdd.ItemName,
+                ItemCount = detailToAdd.ItemCount,
+                ItemPrice = detailToAdd.ItemPrice
+            });
+        }
+
+        foreach (var detailToUpdate in detailsToUpdate)
+        {
+            var updatedDetail = updatedDetails.First(ud => ud.Id == detailToUpdate.Id);
+            detailToUpdate.ItemName = updatedDetail.ItemName;
+            detailToUpdate.ItemCount = updatedDetail.ItemCount;
+            detailToUpdate.ItemPrice = updatedDetail.ItemPrice;
+        }
+
+        foreach (var detailToRemove in detailsToRemove)
+        {
+            _unitOfWork.InvoiceDetails.Delete(detailToRemove);
+        }
     }
 }

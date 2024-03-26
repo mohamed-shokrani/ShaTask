@@ -7,6 +7,7 @@ using ViewModel;
 
 namespace ShaTask.Controllers
 {
+    [Route("cashiers")]
     public class CashiersController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -15,18 +16,19 @@ namespace ShaTask.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var list = await _unitOfWork.Cashiers.GetAll(x => x.IsActive,b=>b.Branch)
                                     .Select(x => new CashierVM
                                     {
-                                        ID = x.Id,
+                                        CashierID = x.Id,
                                         BranchName = x.Branch.BranchName,
                                         CashierName = x.CashierName,
                                     }).ToListAsync();
             return View(list);
         }
+        [HttpGet("create")]
         public async Task<IActionResult> Create()
         {
             var vm = new CashierUpdateAndCreateVM();
@@ -34,7 +36,7 @@ namespace ShaTask.Controllers
 
             return View(vm);
         }
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(CashierUpdateAndCreateVM vM)
         {
             var cashierExists = await _unitOfWork.Cashiers.CheckEntityExistsAsync<Cashier>(x => x.CashierName == vM.CashierName);
@@ -62,11 +64,12 @@ namespace ShaTask.Controllers
             }
             return View(vM);
         }
-        public async Task<IActionResult> Edit(int id)
+        [HttpGet("update/{id}")]
+        public async Task<IActionResult> Update(int id)
         {
             var cashier = await _unitOfWork.Cashiers.GetByIdAsync(id);
             if (cashier == null) return RedirectToAction("Index");
-            var vm = new CashierVM
+            var vm = new CashierUpdateAndCreateVM
             {
                 ID = id,
                 CashierName = cashier.CashierName,
@@ -76,24 +79,24 @@ namespace ShaTask.Controllers
             vm.Branches = await _unitOfWork.InvoiceDetails.BranchSelectList();
             return View(vm);
         }
-        [HttpPost]
-        public async Task<IActionResult> Edit(CashierVM vM)
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> Update(int id, CashierUpdateAndCreateVM model)
         {
-            vM.Branches = await _unitOfWork.InvoiceDetails.BranchSelectList();
+            model.Branches = await _unitOfWork.InvoiceDetails.BranchSelectList();
 
             if (ModelState.IsValid)
             {
-                var cashier = await _unitOfWork.Cashiers.GetByIdAsync(vM.ID);
-                cashier.CashierName = vM.CashierName;
-                cashier.BranchId = vM.BranchID;
+                var cashier = await _unitOfWork.Cashiers.GetByIdAsync(id);
+                cashier.CashierName = model.CashierName;
+                cashier.BranchId = model.BranchID;
 
                 await _unitOfWork.Cashiers.UpdateAsync(cashier);
                 await _unitOfWork.Complete();
                 return RedirectToAction("Index");
             }
-            return View(vM);
+            return View(model);
         }
-        [HttpPost]
+        [HttpPost ("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -117,7 +120,7 @@ namespace ShaTask.Controllers
             }
 
         }
-        [HttpPost]
+        [HttpPost("dactivateCashier/{id}")]
         public async Task<IActionResult> DeActivateCashier(int id)
         {
             var deactivateCashier = await _unitOfWork.Cashiers.GetByIdAsync(id);

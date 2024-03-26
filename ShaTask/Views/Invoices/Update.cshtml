@@ -4,7 +4,7 @@
     ViewData["Title"] = "تعديل فاتورة ";
 }
 
-<form asp-controller="Invoices" asp-action="updateupdate" method="post">
+<form asp-controller="Invoices" asp-action="updateInvoice" method="post">
     <div dir="rtl">
         <div class="row">
             <div class="row col-md-12">
@@ -22,9 +22,14 @@
             </div>
             <input  type="hidden" id="Id" name="Id" value="@Model.Id"/>
             <div id="item-container" class="mt-3">
+              
                 @foreach (var item in Model.InvoiceDetails)
                 {
+                   
+
                     <div class="show-items mb-2 row">
+                        <input type="hidden" name="InvoiceDetails[@item.Id].Id" value="@item.Id" />
+
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="form-label" for="itemName">إسم المنتج</label>
@@ -49,7 +54,14 @@
                                 <input id="totalForEachItem" value="@(item.ItemPrice * item.ItemCount )" type="number" readonly class="form-control total" />
                             </div>
                         </div>
+                        <div class="col-md-1 itemClone">
+                            <div class="form-group">
+                                <label class="form-label">##</label>
+                                <button type="button" class="form-control bg-danger text-light delete-btn">حذف</button>
+                            </div>
+                        </div>
                     </div>
+                   
                 }
             </div>
 

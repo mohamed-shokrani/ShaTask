@@ -1,5 +1,4 @@
-﻿@using ViewModel
-@model List<CashierVM>
+﻿@model List<CashierVM>
 
 <div class="container mt-4" dir="rtl">
     <h3 class="text-center">الكاشير</h3>
@@ -25,9 +24,9 @@
                         <td>@cashier.CashierName</td>
                         <td>@cashier.BranchName</td>
                         <td>
-                            <a asp-action="Edit" class="btn btn-warning" asp-route-id="@cashier.ID">تعديل</a> |
-                            <a class="btn btn-danger" onclick="deleteCashier('@cashier.ID')">حذف</a>
-                            <a class="btn btn-danger" onclick="DeactivateCashier('@cashier.ID')">إلغاء النشاط</a>
+                            <a asp-action="update" class="btn btn-warning" asp-route-id="@cashier.CashierID">تعديل</a> |
+                            <a class="btn btn-danger" onclick="deleteCashier('@cashier.CashierID')">حذف</a>
+                            <a class="btn btn-danger" onclick="DeactivateCashier('@cashier.CashierID')">إلغاء النشاط</a>
 
                         </td>
                     </tr>
