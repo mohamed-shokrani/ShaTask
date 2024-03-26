@@ -1,7 +1,4 @@
-﻿
-
-
-$(document).ready(function () {
+﻿$(document).ready(function () {
     
         $("#add-new").click(function () {
             let newRow = $(".show-items").first().clone();
@@ -11,9 +8,6 @@ $(document).ready(function () {
         });
 
     $("#item-container").children().slice(1).find("label").remove();
-
-    
-
         $(document).on('change', '.itemCount, .itemPrice', function () {
             var totalcost = 0;
             // Get the quantity and price of the current item
@@ -80,11 +74,8 @@ $(document).ready(function () {
 
 
                 if (totalcost > 0)
-                    $("#total-cost").val("totalPrice:" + " " + totalcost);
-                else {
-                    $("#total-cost").val("totalPrice");
-
-                }
+                    $("#total-cost").text(totalcost);
+             
             });
         }
        

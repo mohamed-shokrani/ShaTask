@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ShaTask.Data;
 using ShaTask.Models;
 using ShaTask.Repository;
+using System.Linq.Expressions;
 using System.Security.Policy;
 using ViewModel;
 
@@ -51,14 +52,16 @@ namespace ShaTask.Interfaces
 
             return list;
         }
-        public async Task<IEnumerable<BranchVM>> BranchSelectList(int BranchID =0)
+        public async Task<IEnumerable<BranchVM>> BranchSelectList(int branchID =0)
         {
             return await _context.Branches.Select(x => new BranchVM
             {
                 BranchName = x.BranchName,
                 BranchID = x.Id,
-                Selected = BranchID > 0 && x.Id == BranchID
+                Selected = branchID > 0 && x.Id == branchID
             }).ToListAsync() ?? [];
         }
+       
+       
     }
 }

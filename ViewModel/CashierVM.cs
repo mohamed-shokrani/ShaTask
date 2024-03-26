@@ -14,4 +14,5 @@ public class CashierVM
     [Display(Name = "Branch ID")]
     public int BranchID { get; set; } 
     public IEnumerable<BranchVM> Branches { get; set; }
+    public bool? Selected { get; set; }
 }

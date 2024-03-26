@@ -37,11 +37,8 @@
                 
 
                 if (totalcost > 0)
-                    $("#total-cost").val("totalPrice:" + " " + totalcost);
-                else {
-                    $("#total-cost").val("totalPrice");
-
-                }
+                    $("#total-cost").text(totalcost );
+                
             });
         }
          $("#generate-inv").on('click' ,function (e) {

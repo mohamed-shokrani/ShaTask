@@ -5,13 +5,17 @@ public class CashierUpdateAndCreateVM
 {
     public int? ID { get; set; }
 
-    [Required(ErrorMessage = "Cashier name is required")]
-    [Display(Name = "Cashier Name")]
+    [Required(ErrorMessage = "إسم الكاشير مطلوب"),MinLength(2,ErrorMessage ="اسم الكاشير مكون من حرفين على الاقل")]
+    [Display(Name = "إسم الكاشير")]
     public string CashierName { get; set; }
+    [Display(Name = "الفرع")]
+
     public string? BranchName { get; set; }
 
+    [Display(Name = "الفرع")]
+    [Required(ErrorMessage = "إسم الفرع مطلوب")]
 
-    [Display(Name = "Branch ID")]
     public int BranchID { get; set; }
     public IEnumerable<BranchVM>? Branches { get; set; } 
+    public bool CashierExist { get; set; }
 }

@@ -3,16 +3,12 @@
 <div class="container mt-4 col-8" dir="rtl">
   
    <form method="post">
-        @if (Model != null && Model.ID != 0)
+        @if (Model.ID > 0)
         {
-            <h1>تعديل كاشير</h1>
+           
             <input type="hidden" asp-for="ID" />
         }
-        else
-        {
-            <h1>إنشاء كاشير جديد</h1>
-        }
-
+       
 
         <div class="form-group">
             <label asp-for="CashierName" class="form-label">اسم الكاشير</label>
@@ -25,10 +21,11 @@
             <select asp-for="BranchID" asp-items='new SelectList(Model.Branches,"BranchID","BranchName")' class="form-control">
                 <option value="">-- اختر الفرع --</option>
             </select>
-            <span asp-validation-for="BranchID" class="text-danger"></span>
+            <span asp-validation-for="BranchName" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-success mt-2">حفظ</button>
         <a asp-action="Index" class="btn btn-primary mt-2">رجوع</a>
     </form>
 </div>
+

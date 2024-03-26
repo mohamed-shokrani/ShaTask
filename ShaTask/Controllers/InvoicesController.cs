@@ -7,15 +7,10 @@ using ViewModel;
 
 namespace ShaTask.Controllers;
 [Route("invoices")]
-public class InvoicesController : Controller
+public class InvoicesController(IUnitOfWork unitOfWork) : Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public InvoicesController(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
-   
     public async Task< IActionResult> Index()
     {
         var invoices = await _unitOfWork.InvoiceDetails.GetAllInvoices();
@@ -54,6 +49,7 @@ public class InvoicesController : Controller
             {
                 BranchId = vm.BranchID,
                 CustomerName = vm.CustomerName,
+                CashierId = vm.CashierID,
                 InvoiceDetails = invoiceDetails.Select(x => new InvoiceDetail
                                                 {
                                                     ItemCount = x.ItemCount,
@@ -71,18 +67,21 @@ public class InvoicesController : Controller
     }
     [HttpGet("update/{id}")]
 
-    public async Task<IActionResult> Update(int ID)
+    public async Task<IActionResult> Update(int id)
     {
-        var invoice = await _unitOfWork.InvoiceHeaders.GetByIdAsyncWithInclude(x => x.Id == ID, include => include.InvoiceDetails );
+        var invoice = await _unitOfWork.InvoiceHeaders.GetByIdAsyncWithInclude(x => x.Id == id, include => include.InvoiceDetails );
+        var cashierList =await CashierSelectList();
+                                          
         var bracnhcList = await _unitOfWork.InvoiceDetails.BranchSelectList(invoice.BranchId);
-        var check = bracnhcList
-                .Where(x => x.BranchID > 0 && x.Selected == true).Select(x => x.BranchID).FirstOrDefault().ToString();
+      
         if (invoice is not null)
         {
             var vm = new InvoiceUpdateVM
             {
                 CustomerName = invoice.CustomerName,
                 BranchList = bracnhcList,
+                CashierList = cashierList,
+                CashierID = invoice.CashierId.GetValueOrDefault(),
                 BranchID = invoice.BranchId,
                 Id = invoice.Id,
                 InvoiceDetails = invoice.InvoiceDetails.Select(i => new InvoiceItemVM
@@ -104,13 +103,14 @@ public class InvoicesController : Controller
 
     public async Task<IActionResult> Update(InvoiceUpdateVM vm, string invoiceDetailsJson)
     {
+       
         var invoice = await _unitOfWork.InvoiceHeaders.GetByIdAsyncWithInclude(x => x.Id == vm.Id, i => i.InvoiceDetails);
 
         if (invoice != null)
         {
             invoice.BranchId = vm.BranchID;
             invoice.CustomerName = vm.CustomerName;
-
+            invoice.CashierId = vm.CashierID;
             var updatedDetails = JsonConvert.DeserializeObject<List<InvoiceItemVM>>(invoiceDetailsJson);
 
             ManageInvoiceDetails(invoice, updatedDetails);
@@ -125,7 +125,7 @@ public class InvoicesController : Controller
 
 
     [HttpPost("delete/{id}")]
-    public async Task<IActionResult> delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var vm = new InvoiceVM();
         try
@@ -170,5 +170,15 @@ public class InvoicesController : Controller
         {
             _unitOfWork.InvoiceDetails.Delete(detailToRemove);
         }
+    }
+    private async Task<IEnumerable<CashierVM>> CashierSelectList(int cashierId = 0)
+    {
+
+        return await _unitOfWork.Cashiers.GetAll().Select(x => new CashierVM
+        {
+            CashierName = x.CashierName,
+            CashierID = x.Id,
+            Selected = cashierId > 0,
+        }).ToListAsync();
     }
 }
