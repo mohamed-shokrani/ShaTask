@@ -10,9 +10,10 @@ public class InvoiceUpdateVM
 
     [Required (ErrorMessage = "اسم العميل مطلوب"), Display(Name = "اسم العميل")]
     public string CustomerName { get; set; }
-        [Required, Display(Name = "اسم BranchName")]
 
-        public string BranchName { get; set; }
+    [Required, Display(Name = "اسم BranchName")]
+    public string BranchName { get; set; }
+    public DateTime InvoiceDate { get; set; }
     public int BranchID { get; set; }
     public int CashierID {  get; set; }
     public long Id { get; set; }

@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    
+    updateTotal();
         $("#add-new").click(function () {
             let newRow = $(".show-items").first().clone();
             newRow.find("label").remove();

@@ -50,6 +50,7 @@ public class InvoicesController(IUnitOfWork unitOfWork) : Controller
                 BranchId = vm.BranchID,
                 CustomerName = vm.CustomerName,
                 CashierId = vm.CashierID,
+                Invoicedate = vm.InvoiceDate,
                 InvoiceDetails = invoiceDetails.Select(x => new InvoiceDetail
                                                 {
                                                     ItemCount = x.ItemCount,
@@ -79,10 +80,12 @@ public class InvoicesController(IUnitOfWork unitOfWork) : Controller
             var vm = new InvoiceUpdateVM
             {
                 CustomerName = invoice.CustomerName,
+                InvoiceDate = invoice.Invoicedate,
                 BranchList = bracnhcList,
                 CashierList = cashierList,
                 CashierID = invoice.CashierId.GetValueOrDefault(),
                 BranchID = invoice.BranchId,
+                
                 Id = invoice.Id,
                 InvoiceDetails = invoice.InvoiceDetails.Select(i => new InvoiceItemVM
                 {
@@ -111,6 +114,7 @@ public class InvoicesController(IUnitOfWork unitOfWork) : Controller
             invoice.BranchId = vm.BranchID;
             invoice.CustomerName = vm.CustomerName;
             invoice.CashierId = vm.CashierID;
+            invoice.Invoicedate = vm.InvoiceDate;
             var updatedDetails = JsonConvert.DeserializeObject<List<InvoiceItemVM>>(invoiceDetailsJson);
 
             ManageInvoiceDetails(invoice, updatedDetails);

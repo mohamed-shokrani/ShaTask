@@ -25,6 +25,10 @@
                         <option value="">-- إختر--</option>
                     </select>
                 </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="InvoiceDate" class="form-label">تاريخ</label>
+                    <input asp-for="InvoiceDate" type="date" class="form-control" id="dateInput" />
+                </div>
             </div>
             <input  type="hidden" id="Id" name="Id" value="@Model.Id"/>
             <div id="item-container" class="mt-3">

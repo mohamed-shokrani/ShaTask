@@ -7,7 +7,7 @@ public class InvoiceVM
 {
     [Required]
     public int BranchID { get; set; }
-
+    public DateTime InvoiceDate { get; set; }
     public long InvoiceID { get; set; }
 
     [Required]
@@ -32,7 +32,6 @@ public class InvoiceVM
     [DataType(DataType.Date)]
     [DisplayName("  Invoice Date  *")]
 
-    public DateTime InvoiceDate { get; set; }
 
     [Range(1, int.MaxValue)]
     public int? CashierID { get; set; }

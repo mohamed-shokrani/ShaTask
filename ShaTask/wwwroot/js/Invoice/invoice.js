@@ -1,5 +1,6 @@
 ﻿const invoiceDetails = [];
-    $(document).ready(function () {
+$(document).ready(function () {
+   
         $("#add-new").click(function () {
             let newRow = $(".show-items").first().clone();
             console.log(newRow.children());
@@ -59,6 +60,11 @@
              else {
                  $('form')[0].reportValidity();
              }
-        });
+         });
+        let now = new Date();
+
+        let formattedDate = now.toISOString().split('T')[0];
+
+        document.getElementById('dateInput').value = formattedDate;
        
     });
